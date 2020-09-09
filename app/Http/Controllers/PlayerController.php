@@ -23,7 +23,7 @@ class PlayerController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'name'=>'required|max:255'
+			'name' => 'required|max:255'
 		]);
 
 		$player = Player::create($request->all());
@@ -45,9 +45,7 @@ class PlayerController extends Controller
 
 		$player = Player::findOrFail($id);
 		$player->answers++;
-		$player->points = (
-			$request->get('correct') ? $player->points + 1 : $player->points - 1
-		);
+		$player->points = ($request->get('correct') ? $player->points + 1 : $player->points - 1);
 
 		$player->save();
 
@@ -56,18 +54,21 @@ class PlayerController extends Controller
 
 	public function delete($id)
 	{
-			$player = Player::findOrFail($id);
-			$player->delete();
+		$player = Player::findOrFail($id);
+		$player->delete();
 
-			return response()->json(null, 204);
+		return response()->json(null, 204);
 	}
 
 	public function resetAnswers($id)
 	{
-			$player = Player::findOrFail($id);
-			$player->answers = 0;
-			$player->points = 0;
+		$player = Player::findOrFail($id);
 
-			return new PlayerResource($player);
+		$player->answers = 0;
+		$player->points = 0;
+
+		$player->save();
+
+		return new PlayerResource($player);
 	}
 }
